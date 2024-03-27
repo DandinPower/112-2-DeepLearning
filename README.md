@@ -51,6 +51,8 @@
 
         ./run.sh
     ```
+    
+    - ensure that you have right config setting in run.sh
 
     - In aishell original dataset, if i activate `speed perturbation related`, it will cause error in stage 11, showing some encoding error. So I comment out the `speed perturbation related` in `run.sh` file. But maybe it stiil have functionality in future usage.
 
