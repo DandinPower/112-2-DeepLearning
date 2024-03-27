@@ -2,15 +2,20 @@
 
 ## Installation
 
+### Prequisites
+
+1. ensure your system already install python3, cuda and cudnn
+
 ### Install ESPnet
 
 1. Reference: [ESPnet](https://espnet.github.io/espnet/installation.html#step-2-installation-espnet)
 
-2. Step
+2. Installation Step
 
     ```bash
-        # git submodule add https://github.com/espnet/espnet.git
-        git submodule update --init
+        # Git clone the repository
+        git submodule add https://github.com/espnet/espnet.git # if you first time clone the repository
+        git submodule update --init # if not, using this command to clone and update the submodule
 
         # Install System Dependencies
         sudo apt-get install cmake
@@ -19,6 +24,9 @@
 
         # cd <espnet-root>/tools
         ./setup_venv.sh $(command -v python3)
+
+        # Install espnet
+        make
 
         # Check the installation
         chmod 777 activate_python.sh
@@ -39,7 +47,7 @@
         cd egs2/aishell/asr1
         
         # Download the unique dependencies tools
-        cd ../../tools ./install_???_tools.sh
+        cd ../../../tools && make kenlm.done # if you encounter error, you can try to run `make kenlm.done` again
 
         ./run.sh
     ```
