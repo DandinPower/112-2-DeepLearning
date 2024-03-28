@@ -59,3 +59,5 @@
 ### New Task
 
 1. Reference: [New Task](https://espnet.github.io/espnet/notebook/espnet2_new_task_tutorial_CMU_11751_18781_Fall2022.html)
+
+在調整模型的時候關掉 stage 11 的 resume 
