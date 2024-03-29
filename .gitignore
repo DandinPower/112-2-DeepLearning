@@ -1,7 +1,8 @@
-venv
-dataset
-downloads
-dataset
-example
-transform
 .vscode
+venv
+
+downloads
+data
+dataset
+transform
+noisy

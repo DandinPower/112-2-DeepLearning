@@ -6,6 +6,14 @@
 
 1. ensure your system already install python3, cuda and cudnn
 
+    ```bash
+    nvcc -V # need to show the cuda version
+    ```
+
+2. download dataset from kaggle
+
+    - [Dataset](https://www.kaggle.com/competitions/nycu-iass-dl2024-taiwanese-asr/data)
+
 ### Install ESPnet
 
 1. Reference: [ESPnet](https://espnet.github.io/espnet/installation.html#step-2-installation-espnet)
@@ -56,8 +64,112 @@
 
     - In aishell original dataset, if i activate `speed perturbation related`, it will cause error in stage 11, showing some encoding error. So I comment out the `speed perturbation related` in `run.sh` file. But maybe it stiil have functionality in future usage.
 
-### New Task
+### Run Homework Dataset
 
-1. Reference: [New Task](https://espnet.github.io/espnet/notebook/espnet2_new_task_tutorial_CMU_11751_18781_Fall2022.html)
+#### Transform Dataset
 
-在調整模型的時候關掉 stage 11 的 resume 
+1. using sox to transform original dataset to 16k sample rate
+
+2. modify dataset path in `transform_wav.sh`
+
+3. run the script
+
+    ```bash
+        chmod 777 transform_wav.sh
+        ./transform_wav.sh
+    ```
+
+#### Add noise to dataset
+
+##### Step
+
+1. install dependencies
+
+    ```bash
+        pip install -r additional_requirements.txt
+    ```
+
+2. download noise dataset by running 
+
+    - modify path inside `download_noise.sh`
+
+    - run the script
+        ```bash
+            chmod 777 download_noise.sh
+            ./download_noise.sh
+        ```
+
+3. modify dataset path in `add_noise.py`
+
+4. run the script
+
+    ```bash
+        python3 add_noise.py
+    ```
+
+##### Reference
+
+1. [AudioAugment Library](https://github.com/iver56/audiomentations)
+2. [BackgroundNoiseDataset](https://github.com/karolpiczak/ESC-50#download)
+3. [ImpulseResponseDataset](http://www.echothief.com/)
+
+#### Generate espnet format dataset
+
+1. modify `generate_dataset.py` path
+
+2. run the script
+
+    ```bash
+        python3 generate_dataset.py
+    ```
+
+#### Run ESPnet
+
+1. put the generated dataset in `espnet/egs2/aishell/asr1` folder
+
+2. go to `espnet/egs2/aishell/asr1` folder
+
+2. modify `run.sh` file
+
+    - modify `token_type=char` into `token_type=word`, otherwise the sequence length will be too long
+
+3. modify `conf/train_asr_branchformer.yaml` for training setting
+
+    - lower the `batch_bins` if you encounter `CUDA Out of memory` error
+    - modify `epoch` to higher value if you want to train more epochs
+
+4. run the script to train the model
+
+    ```bash
+        ./run.sh --stage 2 --stop_stage 11 # because we don't need to run original dataset download and preprocess
+    ```
+
+5. after training, run the script to decode the model
+
+    - [Reference](https://github.com/espnet/espnet/blob/master/egs2/TEMPLATE/asr1/README_multitask.md#how-to-run)
+
+    - use cpu for inference
+        ```bash
+            ./run.sh --stage 12 --stop_stage 12 --test_sets test
+        ```
+
+    - use gpu for inference
+        ```bash
+            ./run.sh --stage 12 --stop_stage 12 --test_sets test --gpu_inference true
+        ```
+
+6. you can also run whole training and infernce process by running
+
+    ```bash
+        ./run.sh --stage 2 --stop_stage 12 --test_sets test
+    ```
+
+7. the result will be in `exp/asr_train_asr_branchformer_raw_zh_word/decode_asr_branchformer_asr_model_valid.acc.ave/test/text`
+
+#### Monitor Training Process
+
+1. using tensorboard to monitor the training process
+
+    ```bash
+        tensorboard --logdir exp
+    ```
