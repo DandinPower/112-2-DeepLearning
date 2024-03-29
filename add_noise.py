@@ -5,6 +5,7 @@ from audiomentations import Compose, SomeOf, AddGaussianNoise, AddGaussianSNR, T
 from audiomentations.core.audio_loading_utils import load_sound_file
 import nlpaug.augmenter.audio as naa
 import nlpaug.flow as naf
+from tqdm import tqdm
 
 InPath = "datasets/transform/train"
 OutPath = "datasets/noisy/train"
@@ -27,6 +28,7 @@ augment2 = Compose([
     AddGaussianSNR(min_snr_in_db=10, max_snr_in_db=30, p=0.2),
     TimeStretch(min_rate=0.8, max_rate=1.2, leave_length_unchanged=False, p=0.4),
     PitchShift(min_semitones=-4, max_semitones=4, p=0.4),
+    # Speed(min_speed=0.8, max_speed=1.2, p=0.4),
     AddBackgroundNoise(
         sounds_path=BACKGROUNDNOISE_FOLDER,
         min_snr_in_db=10,
@@ -45,12 +47,15 @@ augment2 = Compose([
         )
 ])
 
-for file in os.listdir(InPath):
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
+
+for file in tqdm(os.listdir(InPath)):
     if file.endswith(".wav"):
         samples, sample_rate = load_sound_file(
             os.path.join(InPath, file), sample_rate=None
         )
-        print("#", os.path.join(InPath, file), sample_rate, len(samples))
+        # print("#", os.path.join(InPath, file), sample_rate, len(samples))
         # Augment/transform/perturb the audio data
         augmented_samples1 = augment1.augment(samples)
         augmented_samples2 = augment2(samples=augmented_samples1[0], sample_rate=sample_rate)
