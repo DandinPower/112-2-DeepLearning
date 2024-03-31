@@ -1,7 +1,7 @@
 import os
 
 DECODE_TEXT_PATH = "espnet/egs2/aishell_test/asr1/exp/asr_train_asr_branchformer_raw_zh_word/decode_asr_branchformer_asr_model_valid.acc.ave/test/text"
-SUBMISSION_PATH = "output/only_noise_once/submission.csv"
+SUBMISSION_PATH = "output/learn_1e-4_Batch_200000_warmupstep_10000_renoise_1/submission.csv"
 
 def check_path():
     if not os.path.exists(DECODE_TEXT_PATH):

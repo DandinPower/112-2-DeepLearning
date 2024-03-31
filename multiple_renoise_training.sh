@@ -1,5 +1,5 @@
 EPOCHS=1000
-UPDATE_FREQ=5
+UPDATE_FREQ=1
 CURRENT_MAX_EPOCH=0
 
 TRAIN_SHELL_FOLDER=espnet/egs2/aishell_test/asr1
@@ -21,4 +21,5 @@ for i in $(seq 1 $UPDATE_FREQ $EPOCHS); do
     echo "End training from epoch $((CURRENT_MAX_EPOCH - UPDATE_FREQ)) to $CURRENT_MAX_EPOCH"
     echo "Add noise"
     python add_noise.py
+    (cd $TRAIN_SHELL_FOLDER && $DATA_PREP_SCRIPT)
 done

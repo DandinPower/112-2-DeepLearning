@@ -3,6 +3,8 @@ import os
 from dataclasses import dataclass
 import random
 
+RANDOM_SEED = 0
+
 RAW_TRAIN_DATASET_FOLDER = 'datasets/noisy/train'
 RAW_TEST_DATASET_FOLDER = 'datasets/transform/test'
 ANSWER_FILE = 'datasets/downloads/train/train-toneless.csv'
@@ -136,7 +138,7 @@ def main():
         os.system(f'rm -rf {FINAL_FOLDER}')
     
     train_datas: list[WavData] = load_train_dataset()
-    train, valid = train_valid_split(train_datas, 0.85, 0.15)
+    train, valid = train_valid_split(train_datas, 0.85, 0.15, RANDOM_SEED)
     
     generate_spk2utt(train, f'{FINAL_TRAIN_FOLDER}/spk2utt')
     generate_spk2utt(valid, f'{FINAL_VALID_FOLDER}/spk2utt')
