@@ -42,26 +42,25 @@ def main():
     ], aug_p=0.4)
 
     augment2 = Compose([
-        AddGaussianSNR(min_snr_in_db=10, max_snr_in_db=30, p=0.2),
-        TimeStretch(min_rate=0.8, max_rate=1.2, leave_length_unchanged=False, p=0.4),
+        # AddGaussianSNR(min_snr_in_db=10, max_snr_in_db=30, p=0.2),
+        # TimeStretch(min_rate=0.8, max_rate=1.2, leave_length_unchanged=False, p=0.4),
         PitchShift(min_semitones=-4, max_semitones=4, p=0.4),
-        # Speed(min_speed=0.8, max_speed=1.2, p=0.4),
-        AddBackgroundNoise(
-            sounds_path=BACKGROUNDNOISE_FOLDER,
-            min_snr_in_db=10,
-            max_snr_in_db=30.0,
-            p=0.4),
-        AddShortNoises(
-        sounds_path=BACKGROUNDNOISE_FOLDER,
-        min_snr_in_db=10,
-        max_snr_in_db=30.0,
-        noise_rms="relative_to_whole_input",
-        min_time_between_sounds=2.0,
-        max_time_between_sounds=8.0,
-        p=0.3),
-        ApplyImpulseResponse(
-                ir_path=IMPULSERESPONSE_FOLDER, p=0.4
-            )
+        # AddBackgroundNoise(
+        #     sounds_path=BACKGROUNDNOISE_FOLDER,
+        #     min_snr_in_db=10,
+        #     max_snr_in_db=30.0,
+        #     p=0.4),
+        # AddShortNoises(
+        #     sounds_path=BACKGROUNDNOISE_FOLDER,
+        #     min_snr_in_db=10,
+        #     max_snr_in_db=30.0,
+        #     noise_rms="relative_to_whole_input",
+        #     min_time_between_sounds=2.0,
+        #     max_time_between_sounds=8.0,
+        #     p=0.3),
+        # ApplyImpulseResponse(
+        #         ir_path=IMPULSERESPONSE_FOLDER, p=0.4
+        #     )
     ])
 
     with Pool() as p:

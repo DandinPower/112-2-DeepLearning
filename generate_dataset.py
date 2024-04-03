@@ -7,6 +7,7 @@ RANDOM_SEED = 0
 
 RAW_TRAIN_DATASET_FOLDER = 'datasets/noisy/train'
 RAW_TEST_DATASET_FOLDER = 'datasets/transform/test'
+RAW_CLEAN_TEST_DATASET_FOLDER = 'datasets/downloads/test/test_clean/test'
 ANSWER_FILE = 'datasets/downloads/train/train-toneless.csv'
 SPK_ID = 'S01'
 
@@ -14,6 +15,7 @@ FINAL_FOLDER = 'datasets/data'
 FINAL_TRAIN_FOLDER = f'{FINAL_FOLDER}/train'
 FINAL_VALID_FOLDER = f'{FINAL_FOLDER}/dev'
 FINAL_TEST_FOLDER = f'{FINAL_FOLDER}/test'
+FINAL_CLEAN_TEST_FOLDER = f'{FINAL_FOLDER}/test_clean'
 
 @dataclass
 class WavData:
@@ -157,6 +159,12 @@ def main():
     generate_spk2utt(test_datas, f'{FINAL_TEST_FOLDER}/spk2utt')
     generate_utt2spk(test_datas, f'{FINAL_TEST_FOLDER}/utt2spk')
     generate_wav_scp(test_datas, f'{FINAL_TEST_FOLDER}/wav.scp')
+
+    clean_test_datas: list[WavData] = load_predict_dataset(RAW_CLEAN_TEST_DATASET_FOLDER)
+
+    generate_spk2utt(clean_test_datas, f'{FINAL_CLEAN_TEST_FOLDER}/spk2utt')
+    generate_utt2spk(clean_test_datas, f'{FINAL_CLEAN_TEST_FOLDER}/utt2spk')
+    generate_wav_scp(clean_test_datas, f'{FINAL_CLEAN_TEST_FOLDER}/wav.scp')
 
 if __name__ == "__main__":
     main()
