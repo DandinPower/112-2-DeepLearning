@@ -224,3 +224,26 @@
     ```bash
     ./run.sh --stage 2 --stop_stage 12 --test_sets test
     ```
+
+### Run S3prl
+
+- first go to espnet/tools/installers folder
+
+- run the script to install s3prl
+
+    ```bash
+    ./install_s3prl.sh
+    ```
+
+- go to espnet/egs2/aishell/asr1 folder
+
+- use the `configs\train_asr_conformer_s3prl.yaml` as the training config
+
+    - ensure `extract_feats_in_collect_stats` is true, otherwise the training process will not work
+    - open this setting will require more memory, so you need to lower the `nj` in `run.sh` file to lower the number of parallel process
+
+- run the script to train the model
+
+    ```bash
+    ./run.sh --stage 2 --stop_stage 11
+    ```

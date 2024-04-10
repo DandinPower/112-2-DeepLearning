@@ -14,7 +14,6 @@ InPath = "datasets/transform/train"
 OutPath = "datasets/noisy/train"
 BACKGROUNDNOISE_FOLDER = "datasets/downloads/background_noise/ESC-50-master/audio"
 IMPULSERESPONSE_FOLDER = "datasets/builtin/echo_thief_impulse_response"
-sr = 22050
 
 def check_path():
     if os.path.exists(OutPath):
@@ -38,29 +37,29 @@ def process_file(args):
 
 def main():
     augment1 = naf.Sometimes([
-    naa.VtlpAug(sampling_rate=sr, zone=(0.0, 1.0), coverage=1.0, factor=(0.9, 1.1)),
+    naa.VtlpAug(sampling_rate=16000, zone=(0.0, 1.0), coverage=1.0, factor=(0.9, 1.1)),
     ], aug_p=0.4)
 
     augment2 = Compose([
-        # AddGaussianSNR(min_snr_in_db=10, max_snr_in_db=30, p=0.2),
-        # TimeStretch(min_rate=0.8, max_rate=1.2, leave_length_unchanged=False, p=0.4),
+        AddGaussianSNR(min_snr_in_db=10, max_snr_in_db=30, p=0.2),
+        TimeStretch(min_rate=0.8, max_rate=1.2, leave_length_unchanged=False, p=0.4),
         PitchShift(min_semitones=-4, max_semitones=4, p=0.4),
-        # AddBackgroundNoise(
-        #     sounds_path=BACKGROUNDNOISE_FOLDER,
-        #     min_snr_in_db=10,
-        #     max_snr_in_db=30.0,
-        #     p=0.4),
-        # AddShortNoises(
-        #     sounds_path=BACKGROUNDNOISE_FOLDER,
-        #     min_snr_in_db=10,
-        #     max_snr_in_db=30.0,
-        #     noise_rms="relative_to_whole_input",
-        #     min_time_between_sounds=2.0,
-        #     max_time_between_sounds=8.0,
-        #     p=0.3),
-        # ApplyImpulseResponse(
-        #         ir_path=IMPULSERESPONSE_FOLDER, p=0.4
-        #     )
+        AddBackgroundNoise(
+            sounds_path=BACKGROUNDNOISE_FOLDER,
+            min_snr_in_db=10,
+            max_snr_in_db=30.0,
+            p=0.4),
+        AddShortNoises(
+            sounds_path=BACKGROUNDNOISE_FOLDER,
+            min_snr_in_db=10,
+            max_snr_in_db=30.0,
+            noise_rms="relative_to_whole_input",
+            min_time_between_sounds=2.0,
+            max_time_between_sounds=8.0,
+            p=0.3),
+        ApplyImpulseResponse(
+                ir_path=IMPULSERESPONSE_FOLDER, p=0.4
+            )
     ])
 
     with Pool() as p:

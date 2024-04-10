@@ -4,10 +4,11 @@ from dataclasses import dataclass
 import random
 
 RANDOM_SEED = 0
+TRAIN_VALID_SPLIT_RATE = 0.98
 
 RAW_TRAIN_DATASET_FOLDER = 'datasets/noisy/train'
 RAW_TEST_DATASET_FOLDER = 'datasets/transform/test'
-RAW_CLEAN_TEST_DATASET_FOLDER = 'datasets/downloads/test/test_clean/test'
+# RAW_CLEAN_TEST_DATASET_FOLDER = 'datasets/downloads/test/test_clean/test'
 ANSWER_FILE = 'datasets/downloads/train/train-toneless.csv'
 SPK_ID = 'S01'
 
@@ -15,7 +16,7 @@ FINAL_FOLDER = 'datasets/data'
 FINAL_TRAIN_FOLDER = f'{FINAL_FOLDER}/train'
 FINAL_VALID_FOLDER = f'{FINAL_FOLDER}/dev'
 FINAL_TEST_FOLDER = f'{FINAL_FOLDER}/test'
-FINAL_CLEAN_TEST_FOLDER = f'{FINAL_FOLDER}/test_clean'
+# FINAL_CLEAN_TEST_FOLDER = f'{FINAL_FOLDER}/test_clean'
 
 @dataclass
 class WavData:
@@ -140,7 +141,7 @@ def main():
         os.system(f'rm -rf {FINAL_FOLDER}')
     
     train_datas: list[WavData] = load_train_dataset()
-    train, valid = train_valid_split(train_datas, 0.85, 0.15, RANDOM_SEED)
+    train, valid = train_valid_split(train_datas, TRAIN_VALID_SPLIT_RATE, 1-TRAIN_VALID_SPLIT_RATE, RANDOM_SEED)
     
     generate_spk2utt(train, f'{FINAL_TRAIN_FOLDER}/spk2utt')
     generate_spk2utt(valid, f'{FINAL_VALID_FOLDER}/spk2utt')
@@ -160,11 +161,11 @@ def main():
     generate_utt2spk(test_datas, f'{FINAL_TEST_FOLDER}/utt2spk')
     generate_wav_scp(test_datas, f'{FINAL_TEST_FOLDER}/wav.scp')
 
-    clean_test_datas: list[WavData] = load_predict_dataset(RAW_CLEAN_TEST_DATASET_FOLDER)
+    # clean_test_datas: list[WavData] = load_predict_dataset(RAW_CLEAN_TEST_DATASET_FOLDER)
 
-    generate_spk2utt(clean_test_datas, f'{FINAL_CLEAN_TEST_FOLDER}/spk2utt')
-    generate_utt2spk(clean_test_datas, f'{FINAL_CLEAN_TEST_FOLDER}/utt2spk')
-    generate_wav_scp(clean_test_datas, f'{FINAL_CLEAN_TEST_FOLDER}/wav.scp')
+    # generate_spk2utt(clean_test_datas, f'{FINAL_CLEAN_TEST_FOLDER}/spk2utt')
+    # generate_utt2spk(clean_test_datas, f'{FINAL_CLEAN_TEST_FOLDER}/utt2spk')
+    # generate_wav_scp(clean_test_datas, f'{FINAL_CLEAN_TEST_FOLDER}/wav.scp')
 
 if __name__ == "__main__":
     main()
