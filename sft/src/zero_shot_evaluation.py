@@ -75,7 +75,7 @@ def main(args: Namespace):
         ))
 
     write_tsv(
-        data_list, f'{args.output_dir}/{get_model_name(args.model_name)}.tsv')
+        data_list, f'{args.output_dir}/{get_model_name(args.model_name)}_{args.sample_size}.tsv')
 
 
 if __name__ == "__main__":
