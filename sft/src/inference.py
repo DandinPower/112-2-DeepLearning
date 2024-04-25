@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 import re
 import os
 
@@ -8,7 +9,8 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 from tqdm import tqdm
 
 
-MODEL_TYPE_CHOISES = ["MediaTek-Research/Breeze-7B-Instruct-v1_0"]
+BREEZE_MODEL_NAME_OR_PATH = "MediaTek-Research/Breeze-7B-Instruct-v1_0"
+LLAMA_MODEL_NAME_OR_PATH = "meta-llama/Meta-Llama-3-8B-Instruct"
 
 
 @dataclass
@@ -38,13 +40,6 @@ def get_model_and_tokenizer(model_name_or_path: str, adapter_name_or_path: str) 
     return model, tokenizer
 
 
-def get_valid_input_text(tokenizer, data: dict) -> str:
-    chat = [
-        {"role": "user", "content": data["instruction"]},
-    ]
-    return tokenizer.apply_chat_template(chat, tokenize=False)
-
-
 def write_test_csv(path: str, test_datas: list[TestData]) -> None:
     os.makedirs(os.path.dirname(path), exist_ok=True)
 
@@ -57,20 +52,53 @@ def write_test_csv(path: str, test_datas: list[TestData]) -> None:
                 f.write(f"{test_data.id},{test_data.answer}\n")
 
 
-class FindAnswerOutputParser:
-    def __init__(self, model_type: str):
-        assert model_type in MODEL_TYPE_CHOISES, "Invalid model_type"
-        self.model_type = model_type
-
+class TextProcessor(ABC):
+    @abstractmethod
     def parse(self, model_output: str) -> str:
-        if self.model_type == "MediaTek-Research/Breeze-7B-Instruct-v1_0":
-            return model_output.split("/INST]")[1]
-        else:
-            raise NotImplementedError
+        pass
+
+    @abstractmethod
+    def get_valid_input_text(self, tokenizer, data: dict) -> str:
+        pass
+
+
+class BreezeTextProcessor(TextProcessor):
+    def parse(self, model_output: str) -> str:
+        return model_output.split("/INST]")[1]
+
+    def get_valid_input_text(self, tokenizer, data: dict) -> str:
+        chat = [
+            {"role": "user", "content": data["instruction"]},
+        ]
+        text = tokenizer.apply_chat_template(chat, tokenize=False)
+        return text
+
+
+class LlamaTextProcessor(TextProcessor):
+    def parse(self, model_output: str) -> str:
+        return model_output.split("<|start_header_id|>assistant<|end_header_id|>")[1]
+
+    def get_valid_input_text(self, tokenizer, data: dict) -> str:
+        chat = [
+            {"role": "user", "content": data["instruction"]},
+        ]
+        text = tokenizer.apply_chat_template(chat, tokenize=False)
+        text += "<|start_header_id|>assistant<|end_header_id|>"
+        return text
+
+
+def get_text_processor(model_name_or_path: str) -> TextProcessor:
+    if model_name_or_path == BREEZE_MODEL_NAME_OR_PATH:
+        return BreezeTextProcessor()
+    elif model_name_or_path == LLAMA_MODEL_NAME_OR_PATH:
+        return LlamaTextProcessor()
+    else:
+        raise ValueError(
+            f"Unsupported model_name_or_path: {model_name_or_path}")
 
 
 def test(model, tokenizer, args: Namespace):
-    find_answer_output_parser = FindAnswerOutputParser(args.model_name_or_path)
+    text_processor = get_text_processor(args.model_name_or_path)
 
     pipe = pipeline("text-generation", model=model, tokenizer=tokenizer)
 
@@ -80,7 +108,7 @@ def test(model, tokenizer, args: Namespace):
     test_datas: list[TestData] = []
 
     for data in dataset:
-        test_datas.append(TestData(data["id"], data["text"], None, None))
+        test_datas.append(TestData(data["id"], data["text"], None))
 
     not_found = 0
 
@@ -88,7 +116,7 @@ def test(model, tokenizer, args: Namespace):
         outputs = pipe(test_data.text, max_new_tokens=args.max_new_tokens, do_sample=True,
                        temperature=args.temperature, top_k=args.top_k, top_p=args.top_p)
         model_output = outputs[0]["generated_text"]
-        answer_output = find_answer_output_parser.parse(model_output)
+        answer_output = text_processor.parse(model_output)
 
         answer = re.findall(r"\d", answer_output)
         if len(answer) == 0:
@@ -102,7 +130,7 @@ def test(model, tokenizer, args: Namespace):
 
 
 def valid(model, tokenizer, args: Namespace):
-    find_answer_output_parser = FindAnswerOutputParser(args.model_name_or_path)
+    text_processor = get_text_processor(args.model_name_or_path)
 
     pipe = pipeline("text-generation", model=model, tokenizer=tokenizer)
 
@@ -112,7 +140,7 @@ def valid(model, tokenizer, args: Namespace):
     valid_datas: list[ValidData] = []
 
     for data in dataset:
-        text = get_valid_input_text(tokenizer, data)
+        text = text_processor.get_valid_input_text(tokenizer, data)
         valid_datas.append(ValidData(text, int(data["output"]), None))
 
     not_found = 0
@@ -121,7 +149,7 @@ def valid(model, tokenizer, args: Namespace):
         outputs = pipe(valid_data.text, max_new_tokens=args.max_new_tokens, do_sample=True,
                        temperature=args.temperature, top_k=args.top_k, top_p=args.top_p)
         model_output = outputs[0]["generated_text"]
-        answer_output = find_answer_output_parser.parse(model_output)
+        answer_output = text_processor.parse(model_output)
 
         answer = re.findall(r"\d", answer_output)
         if len(answer) == 0:

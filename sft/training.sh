@@ -1,9 +1,17 @@
 NNODES=1
 NPROC_PER_NODE=2
 
-MODEL_NAME_OR_PATH=MediaTek-Research/Breeze-7B-Instruct-v1_0
-OUTPUT_DIR=/mnt/nvme0n1p1/supervised_fine_tuning/breeze_7b_lora_completion_only
 DATASET_NAME_OR_PATH=DandinPower/ZH-Reading-Comprehension-Breeze-Instruct
+# Available dataset
+# 1. DandinPower/ZH-Reading-Comprehension-Llama-Instruct
+# 2. DandinPower/ZH-Reading-Comprehension-Breeze-Instruct
+
+MODEL_NAME_OR_PATH=MediaTek-Research/Breeze-7B-Instruct-v1_0
+# Available model
+# 1. meta-llama/Meta-Llama-3-8B-Instruct
+# 2. MediaTek-Research/Breeze-7B-Instruct-v1_0
+
+OUTPUT_DIR=/mnt/nvme0n1p1/supervised_fine_tuning/llama_3_8b_lora_completion_only
 TRAIN_SPLIT=train
 VAL_SPLIT=validation
 
@@ -52,4 +60,4 @@ torchrun --nnodes $NNODES --nproc_per_node $NPROC_PER_NODE src/training.py \
     --deepspeed $DEEPSPEED_CONFIG \
     --overwrite_output_dir \
     --push_to_hub \
-    # --completion_only_training \
+    --completion_only_training \

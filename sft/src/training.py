@@ -4,6 +4,9 @@ from transformers import HfArgumentParser, TrainingArguments, AutoModelForCausal
 from trl import SFTTrainer, DataCollatorForCompletionOnlyLM
 from peft import LoraConfig, get_peft_model
 
+BREEZE_MODEL_NAME_OR_PATH = "MediaTek-Research/Breeze-7B-Instruct-v1_0"
+LLAMA_MODEL_NAME_OR_PATH = "meta-llama/Meta-Llama-3-8B-Instruct"
+
 
 @dataclass
 class ModelArguments:
@@ -51,6 +54,15 @@ def show_tokenizer_config(tokenizer):
     print(f"Eos token: {tokenizer.eos_token}")
 
 
+def get_response_template(model_name_or_path: str):
+    if model_name_or_path == BREEZE_MODEL_NAME_OR_PATH:
+        return "[/INST]"
+    elif model_name_or_path == LLAMA_MODEL_NAME_OR_PATH:
+        return "<|start_header_id|>assistant<|end_header_id|>"
+    else:
+        raise ValueError(f"Unknown model name or path: {model_name_or_path}")
+
+
 def main():
     parser = HfArgumentParser(
         (ModelArguments, DataArguments, MyTrainingArguments, LoraArguments))
@@ -63,6 +75,9 @@ def main():
         model_args.model_name_or_path)
 
     show_tokenizer_config(tokenizer)
+
+    if tokenizer.pad_token is None:
+        tokenizer.add_special_tokens({'pad_token': '[PAD]'})  # for llama3
 
     model = AutoModelForCausalLM.from_pretrained(
         model_args.model_name_or_path,
@@ -80,7 +95,8 @@ def main():
 
     if training_args.completion_only_training:
         print("Completion Only Training")
-        response_template = "[/INST]"
+        response_template = get_response_template(
+            model_args.model_name_or_path)
 
         collator = DataCollatorForCompletionOnlyLM(
             response_template, tokenizer=tokenizer)
@@ -100,7 +116,6 @@ def main():
             max_seq_length=training_args.max_seq_length,
             formatting_func=formatting_prompts_func,
             data_collator=collator,
-            # dataset_text_field="text",
         )
     else:
         print("Using Full Text Training")
