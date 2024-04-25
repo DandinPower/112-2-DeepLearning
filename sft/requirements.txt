@@ -1,6 +1,12 @@
+wheel
 transformers
 datasets
 torch
 sentencepiece
 protobuf
 accelerate
+flash-attn
+deepspeed
+bitsandbytes
+peft
+matplotlib

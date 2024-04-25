@@ -1,9 +1,10 @@
 # Load model directly
 import os
+import torch
 
 from argparse import ArgumentParser, Namespace
 from dataclasses import dataclass
-from transformers import pipeline
+from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
 from datasets import load_dataset, Dataset
 from tqdm import tqdm
 
@@ -46,13 +47,37 @@ def only_get_model_generated_text(original_text: str, model_generate_text: str) 
     return model_generate_text[len(original_text):]
 
 
+def get_model_pipeline(model_name: str):
+    if model_name == "taide/TAIDE-LX-7B-Chat":
+        return pipeline(model=model_name, device_map="auto", use_fast=False)
+    elif model_name == "microsoft/Phi-3-mini-4k-instruct":
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            device_map="cuda",
+            torch_dtype="auto",
+            trust_remote_code=True,
+            attn_implementation="flash_attention_2"
+        )
+        tokenizer = AutoTokenizer.from_pretrained(
+            model_name)
+        return pipeline("text-generation", model=model, tokenizer=tokenizer)
+    elif model_name == "MediaTek-Research/Breeze-7B-Instruct-v1_0":
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            device_map="cuda",
+            torch_dtype="auto",
+            # attn_implementation="flash_attention_2"
+        )
+        tokenizer = AutoTokenizer.from_pretrained(
+            model_name)
+        return pipeline("text-generation", model=model, tokenizer=tokenizer)
+    return pipeline(model=model_name, device_map="auto")
+
+
 def main(args: Namespace):
+    torch.random.manual_seed(42)
     print(f'Loading model: {args.model_name}')
-    if args.model_name == "taide/TAIDE-LX-7B-Chat":
-        pipe = pipeline(model=args.model_name,
-                        device_map="auto", use_fast=False)
-    else:
-        pipe = pipeline(model=args.model_name, device_map="auto")
+    pipe = get_model_pipeline(args.model_name)
 
     print(f'Loading dataset: {args.dataset_name}')
     dataset: Dataset = load_dataset(args.dataset_name, split=args.split)
@@ -75,7 +100,7 @@ def main(args: Namespace):
         ))
 
     write_tsv(
-        data_list, f'{args.output_dir}/{get_model_name(args.model_name)}_{args.sample_size}.tsv')
+        data_list, f'{args.output_dir}/sample_{args.sample_size}/{get_model_name(args.model_name)}_{args.sample_size}.tsv')
 
 
 if __name__ == "__main__":
