@@ -2,7 +2,7 @@ NNODES=1
 NPROC_PER_NODE=2
 
 MODEL_NAME_OR_PATH=MediaTek-Research/Breeze-7B-Instruct-v1_0
-OUTPUT_DIR=/mnt/nvme0n1p1/supervised_fine_tuning/breeze_7b_lora
+OUTPUT_DIR=/mnt/nvme0n1p1/supervised_fine_tuning/breeze_7b_lora_completion_only
 DATASET_NAME_OR_PATH=DandinPower/ZH-Reading-Comprehension-Breeze-Instruct
 TRAIN_SPLIT=train
 VAL_SPLIT=validation
@@ -23,7 +23,7 @@ EVALUATION_STEPS=250
 SAVE_STRATEGY=steps
 SAVE_STEPS=250
 LOGGING_STEPS=50
-NUM_TRAIN_EPOCHS=10
+NUM_TRAIN_EPOCHS=5
 
 DEEPSPEED_CONFIG=config/ds_config.json
 
@@ -50,5 +50,6 @@ torchrun --nnodes $NNODES --nproc_per_node $NPROC_PER_NODE src/training.py \
     --logging_steps $LOGGING_STEPS \
     --num_train_epochs $NUM_TRAIN_EPOCHS \
     --deepspeed $DEEPSPEED_CONFIG \
+    --completion_only_training \
     --overwrite_output_dir \
     --push_to_hub \

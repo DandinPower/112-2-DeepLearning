@@ -29,6 +29,8 @@ class LoraArguments:
 class MyTrainingArguments(TrainingArguments):
     max_seq_length: int = field(default=None)
     load_best_model_at_end: bool = field(default=True)
+    completion_only_training: bool = field(
+        default=True, metadata={"help": "If enable, the loss will be calculated only for the completion part of the input, otherwise the loss will be calculated for the whole input."})
     language: str = field(default="zh")
     tags: str = field(default="nycu-112-2-deeplearning-hw2")
 
@@ -62,14 +64,6 @@ def main():
 
     show_tokenizer_config(tokenizer)
 
-    # # add new pad token to avoid confict with existing end of sentence token
-    # tokenizer.add_special_tokens({"pad_token": "<PAD>"})
-
-    # tokenizer.pad_token = "<PAD>"
-    # tokenizer.padding_side = "right"
-
-    # show_tokenizer_config(tokenizer)
-
     model = AutoModelForCausalLM.from_pretrained(
         model_args.model_name_or_path,
         torch_dtype="auto",
@@ -86,37 +80,45 @@ def main():
     val_dataset = load_dataset(
         data_args.dataset_name_or_path, split=data_args.val_split)
 
-    def preprocess_function(examples):
-        return tokenizer(examples["text"])
+    if training_args.completion_only_training:
+        response_template = "[/INST]"
 
-    train_dataset = train_dataset.map(preprocess_function, batched=True)
+        collator = DataCollatorForCompletionOnlyLM(
+            response_template, tokenizer=tokenizer)
 
-    val_dataset = val_dataset.map(preprocess_function, batched=True)
+        def formatting_prompts_func(example):
+            output_texts = []
+            for i in range(len(example['text'])):
+                output_texts.append(example['text'][i])
+            return output_texts
 
-    print(train_dataset[0])
+        trainer = SFTTrainer(
+            model=model,
+            train_dataset=train_dataset,
+            eval_dataset=val_dataset,
+            args=training_args,
+            peft_config=lora_config,
+            max_seq_length=training_args.max_seq_length,
+            formatting_func=formatting_prompts_func,
+            data_collator=collator,
+            # dataset_text_field="text",
+        )
+    else:
+        def preprocess_function(examples):
+            return tokenizer(examples["text"])
 
-    # response_template = "[/INST] "
+        train_dataset = train_dataset.map(preprocess_function, batched=True)
+        val_dataset = val_dataset.map(preprocess_function, batched=True)
 
-    # collator = DataCollatorForCompletionOnlyLM(
-    #     response_template, tokenizer=tokenizer)
-
-    # def formatting_prompts_func(example):
-    #     output_texts = []
-    #     for i in range(len(example['text'])):
-    #         output_texts.append(example['text'][i])
-    #     return output_texts
-
-    trainer = SFTTrainer(
-        model=model,
-        train_dataset=train_dataset,
-        eval_dataset=val_dataset,
-        args=training_args,
-        peft_config=lora_config,
-        max_seq_length=training_args.max_seq_length,
-        dataset_text_field="text",
-        # formatting_func=formatting_prompts_func,
-        # data_collator=collator,
-    )
+        trainer = SFTTrainer(
+            model=model,
+            train_dataset=train_dataset,
+            eval_dataset=val_dataset,
+            args=training_args,
+            peft_config=lora_config,
+            max_seq_length=training_args.max_seq_length,
+            dataset_text_field="text"
+        )
 
     trainer.train()
 
