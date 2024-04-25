@@ -50,6 +50,6 @@ torchrun --nnodes $NNODES --nproc_per_node $NPROC_PER_NODE src/training.py \
     --logging_steps $LOGGING_STEPS \
     --num_train_epochs $NUM_TRAIN_EPOCHS \
     --deepspeed $DEEPSPEED_CONFIG \
-    --completion_only_training \
     --overwrite_output_dir \
     --push_to_hub \
+    # --completion_only_training \

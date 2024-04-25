@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
-from datasets import load_dataset, Dataset
+from datasets import load_dataset
 from transformers import HfArgumentParser, TrainingArguments, AutoModelForCausalLM, AutoTokenizer
 from trl import SFTTrainer, DataCollatorForCompletionOnlyLM
-from peft import LoraConfig
+from peft import LoraConfig, get_peft_model
 
 
 @dataclass
@@ -30,7 +30,7 @@ class MyTrainingArguments(TrainingArguments):
     max_seq_length: int = field(default=None)
     load_best_model_at_end: bool = field(default=True)
     completion_only_training: bool = field(
-        default=True, metadata={"help": "If enable, the loss will be calculated only for the completion part of the input, otherwise the loss will be calculated for the whole input."})
+        default=None, metadata={"help": "If enable, the loss will be calculated only for the completion part of the input, otherwise the loss will be calculated for the whole input."})
     language: str = field(default="zh")
     tags: str = field(default="nycu-112-2-deeplearning-hw2")
 
@@ -69,8 +69,6 @@ def main():
         torch_dtype="auto",
     )
 
-    from peft import get_peft_model
-
     model = get_peft_model(model, lora_config)
     model.print_trainable_parameters()
 
@@ -81,6 +79,7 @@ def main():
         data_args.dataset_name_or_path, split=data_args.val_split)
 
     if training_args.completion_only_training:
+        print("Completion Only Training")
         response_template = "[/INST]"
 
         collator = DataCollatorForCompletionOnlyLM(
@@ -104,6 +103,8 @@ def main():
             # dataset_text_field="text",
         )
     else:
+        print("Using Full Text Training")
+
         def preprocess_function(examples):
             return tokenizer(examples["text"])
 
