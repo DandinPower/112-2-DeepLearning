@@ -1,8 +1,8 @@
 function run_model {
     MODEL_NAME=$1
-    DATASET_NAME=DandinPower/ZH-Reading-Comprehension
+    DATASET_NAME=DandinPower/ZH-Reading-Comprehension-Breeze-Instruct
     SPLIT=train
-    SAMPLE_SIZE=100
+    SAMPLE_SIZE=50
     OUTPUT_DIR=zero_shot_evaluation
 
     python src/zero_shot_evaluation.py \
@@ -14,7 +14,7 @@ function run_model {
 }
 
 # MODELS=("MediaTek-Research/Breeze-7B-Instruct-v1_0" "google/gemma-1.1-7b-it" "meta-llama/Meta-Llama-3-8B-Instruct")
-MODELS=("MediaTek-Research/Breeze-7B-Instruct-v1_0")
+MODELS=("taide/TAIDE-LX-7B-Chat")
 
 for MODEL in "${MODELS[@]}"
 do

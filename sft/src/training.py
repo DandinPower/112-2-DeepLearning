@@ -86,7 +86,8 @@ def main():
     show_tokenizer_config(tokenizer)
 
     if tokenizer.pad_token is None:
-        tokenizer.add_special_tokens({'pad_token': '[PAD]'})  # for llama3
+        tokenizer.add_special_tokens(
+            {'pad_token': '[PAD]'})  # for llama3, mistral
 
     model = AutoModelForCausalLM.from_pretrained(
         model_args.model_name_or_path,

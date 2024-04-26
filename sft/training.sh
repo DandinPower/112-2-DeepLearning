@@ -1,7 +1,7 @@
 NNODES=1
 NPROC_PER_NODE=2
 
-DATASET_NAME_OR_PATH=DandinPower/ZH-Reading-Comprehension-TAIDE-Chat
+DATASET_NAME_OR_PATH=DandinPower/ZH-Reading-Comprehension-Mistral-Instruct
 # Available dataset
 # 1. DandinPower/ZH-Reading-Comprehension-Llama-Instruct
 # 2. DandinPower/ZH-Reading-Comprehension-Breeze-Instruct
@@ -9,7 +9,7 @@ DATASET_NAME_OR_PATH=DandinPower/ZH-Reading-Comprehension-TAIDE-Chat
 # 4. DandinPower/ZH-Reading-Comprehension-TAIDE-Chat
 # 5. DandinPower/ZH-Reading-Comprehension-Mistral-Instruct
 
-MODEL_NAME_OR_PATH=taide/TAIDE-LX-7B-Chat
+MODEL_NAME_OR_PATH=mistralai/Mistral-7B-Instruct-v0.2
 # Available model
 # 1. meta-llama/Meta-Llama-3-8B-Instruct
 # 2. MediaTek-Research/Breeze-7B-Instruct-v1_0
@@ -17,7 +17,7 @@ MODEL_NAME_OR_PATH=taide/TAIDE-LX-7B-Chat
 # 4. taide/TAIDE-LX-7B-Chat
 # 5. mistralai/Mistral-7B-Instruct-v0.2
 
-OUTPUT_DIR=/mnt/nvme0n1p1/supervised_fine_tuning/taide_7b_lora_completion_only
+OUTPUT_DIR=/mnt/nvme0n1p1/supervised_fine_tuning/mistral_7b_lora_completion_only
 TRAIN_SPLIT=train
 VAL_SPLIT=validation
 

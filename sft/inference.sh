@@ -1,6 +1,6 @@
-ADAPTER_NAME_OR_PATH=DandinPower/taide_7b_lora_completion_only
-OUTPUT_CSV_PATH=predict/taide_7b_lora_completion_only.csv
-DATASET_NAME_OR_PATH=DandinPower/ZH-Reading-Comprehension-TAIDE-Chat
+ADAPTER_NAME_OR_PATH=DandinPower/breeze_7b_lora_completion_only_5_epochs
+OUTPUT_CSV_PATH=predict/mistral_7b_lora_completion_only.csv
+DATASET_NAME_OR_PATH=DandinPower/ZH-Reading-Comprehension-Breeze-Instruct
 # Available dataset
 # 1. DandinPower/ZH-Reading-Comprehension-Llama-Instruct
 # 2. DandinPower/ZH-Reading-Comprehension-Breeze-Instruct
@@ -8,7 +8,7 @@ DATASET_NAME_OR_PATH=DandinPower/ZH-Reading-Comprehension-TAIDE-Chat
 # 4. DandinPower/ZH-Reading-Comprehension-TAIDE-Chat
 # 5. DandinPower/ZH-Reading-Comprehension-Mistral-Instruct
 
-MODEL_NAME_OR_PATH=taide/TAIDE-LX-7B-Chat
+MODEL_NAME_OR_PATH=MediaTek-Research/Breeze-7B-Instruct-v1_0
 # Available model
 # 1. meta-llama/Meta-Llama-3-8B-Instruct
 # 2. MediaTek-Research/Breeze-7B-Instruct-v1_0
@@ -35,6 +35,6 @@ python src/inference.py \
     --temperature $TEMPERATURE \
     --top_k $TOP_K \
     --top_p $TOP_P \
-    --do_test \
     --do_valid \
+    --do_test \
     --verbose \
