@@ -13,8 +13,10 @@ function run_model {
         --output_dir $OUTPUT_DIR
 }
 
+MODELS=("taide/TAIDE-LX-7B-Chat") 
+# You can add more models here
+# Example:
 # MODELS=("MediaTek-Research/Breeze-7B-Instruct-v1_0" "google/gemma-1.1-7b-it" "meta-llama/Meta-Llama-3-8B-Instruct")
-MODELS=("taide/TAIDE-LX-7B-Chat")
 
 for MODEL in "${MODELS[@]}"
 do
