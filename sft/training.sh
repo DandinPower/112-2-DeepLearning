@@ -1,17 +1,23 @@
 NNODES=1
 NPROC_PER_NODE=2
 
-DATASET_NAME_OR_PATH=DandinPower/ZH-Reading-Comprehension-Breeze-Instruct
+DATASET_NAME_OR_PATH=DandinPower/ZH-Reading-Comprehension-TAIDE-Chat
 # Available dataset
 # 1. DandinPower/ZH-Reading-Comprehension-Llama-Instruct
 # 2. DandinPower/ZH-Reading-Comprehension-Breeze-Instruct
+# 3. DandinPower/ZH-Reading-Comprehension-gemma-it
+# 4. DandinPower/ZH-Reading-Comprehension-TAIDE-Chat
+# 5. DandinPower/ZH-Reading-Comprehension-Mistral-Instruct
 
-MODEL_NAME_OR_PATH=MediaTek-Research/Breeze-7B-Instruct-v1_0
+MODEL_NAME_OR_PATH=taide/TAIDE-LX-7B-Chat
 # Available model
 # 1. meta-llama/Meta-Llama-3-8B-Instruct
 # 2. MediaTek-Research/Breeze-7B-Instruct-v1_0
+# 3. google/gemma-1.1-7b-it
+# 4. taide/TAIDE-LX-7B-Chat
+# 5. mistralai/Mistral-7B-Instruct-v0.2
 
-OUTPUT_DIR=/mnt/nvme0n1p1/supervised_fine_tuning/llama_3_8b_lora_completion_only
+OUTPUT_DIR=/mnt/nvme0n1p1/supervised_fine_tuning/taide_7b_lora_completion_only
 TRAIN_SPLIT=train
 VAL_SPLIT=validation
 
@@ -31,7 +37,7 @@ EVALUATION_STEPS=250
 SAVE_STRATEGY=steps
 SAVE_STEPS=250
 LOGGING_STEPS=50
-NUM_TRAIN_EPOCHS=5
+NUM_TRAIN_EPOCHS=3
 
 DEEPSPEED_CONFIG=config/ds_config.json
 

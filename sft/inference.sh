@@ -1,14 +1,20 @@
-ADAPTER_NAME_OR_PATH=DandinPower/llama_3_8b_lora_completion_only
-OUTPUT_CSV_PATH=predict/llama_3_8b_lora_completion_only.csv
-DATASET_NAME_OR_PATH=DandinPower/ZH-Reading-Comprehension-Llama-Instruct
+ADAPTER_NAME_OR_PATH=DandinPower/taide_7b_lora_completion_only
+OUTPUT_CSV_PATH=predict/taide_7b_lora_completion_only.csv
+DATASET_NAME_OR_PATH=DandinPower/ZH-Reading-Comprehension-TAIDE-Chat
 # Available dataset
 # 1. DandinPower/ZH-Reading-Comprehension-Llama-Instruct
 # 2. DandinPower/ZH-Reading-Comprehension-Breeze-Instruct
+# 3. DandinPower/ZH-Reading-Comprehension-gemma-it
+# 4. DandinPower/ZH-Reading-Comprehension-TAIDE-Chat
+# 5. DandinPower/ZH-Reading-Comprehension-Mistral-Instruct
 
-MODEL_NAME_OR_PATH=meta-llama/Meta-Llama-3-8B-Instruct
+MODEL_NAME_OR_PATH=taide/TAIDE-LX-7B-Chat
 # Available model
 # 1. meta-llama/Meta-Llama-3-8B-Instruct
 # 2. MediaTek-Research/Breeze-7B-Instruct-v1_0
+# 3. google/gemma-1.1-7b-it
+# 4. taide/TAIDE-LX-7B-Chat
+# 5. mistralai/Mistral-7B-Instruct-v0.2
 
 TEST_SPLIT=test
 VALID_SPLIT=validation

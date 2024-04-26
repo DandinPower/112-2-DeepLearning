@@ -10,3 +10,13 @@
 2. Unsloth Installation (Optional)
     - go to the github repository for your computer configuration
     - [link](https://github.com/unslothai/unsloth)
+
+## Usage
+
+### Zero Shot Evaluation
+
+### Training
+
+### Inference
+
+### Visualize Training Result

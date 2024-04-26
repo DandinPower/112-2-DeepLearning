@@ -6,6 +6,9 @@ from peft import LoraConfig, get_peft_model
 
 BREEZE_MODEL_NAME_OR_PATH = "MediaTek-Research/Breeze-7B-Instruct-v1_0"
 LLAMA_MODEL_NAME_OR_PATH = "meta-llama/Meta-Llama-3-8B-Instruct"
+GEMMA_MODEL_NAME_OR_PATH = "google/gemma-1.1-7b-it"
+TAIDE_MODEL_NAME_OR_PATH = "taide/TAIDE-LX-7B-Chat"
+MISTRAL_MODEL_NAME_OR_PATH = "mistralai/Mistral-7B-Instruct-v0.2"
 
 
 @dataclass
@@ -59,6 +62,12 @@ def get_response_template(model_name_or_path: str):
         return "[/INST]"
     elif model_name_or_path == LLAMA_MODEL_NAME_OR_PATH:
         return "<|start_header_id|>assistant<|end_header_id|>"
+    elif model_name_or_path == GEMMA_MODEL_NAME_OR_PATH:
+        return "<start_of_turn>model"
+    elif model_name_or_path == TAIDE_MODEL_NAME_OR_PATH:
+        return "[/INST]"
+    elif model_name_or_path == MISTRAL_MODEL_NAME_OR_PATH:
+        return "[/INST]"
     else:
         raise ValueError(f"Unknown model name or path: {model_name_or_path}")
 
@@ -137,6 +146,8 @@ def main():
         )
 
     trainer.train()
+
+    trainer.evaluate()  # Evaluate the model after training
 
     kwargs = {
         "language": training_args.language,
