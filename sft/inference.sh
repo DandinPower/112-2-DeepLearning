@@ -1,5 +1,5 @@
-ADAPTER_NAME_OR_PATH=DandinPower/breeze_7b_lora_completion_only_5_epochs
-OUTPUT_CSV_PATH=predict/mistral_7b_lora_completion_only.csv
+ADAPTER_NAME_OR_PATH=DandinPower/breeze_7b_lora_completion_only
+OUTPUT_CSV_PATH=predict/breeze_7b_lora_completion_only_greedy.csv
 DATASET_NAME_OR_PATH=DandinPower/ZH-Reading-Comprehension-Breeze-Instruct
 # Available dataset
 # 1. DandinPower/ZH-Reading-Comprehension-Llama-Instruct
@@ -38,3 +38,4 @@ python src/inference.py \
     --do_valid \
     --do_test \
     --verbose \
+    # --do_sample \ # Uncomment this line if you want to use sampling instead of greedy decoding

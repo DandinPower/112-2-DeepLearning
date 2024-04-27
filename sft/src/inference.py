@@ -135,7 +135,7 @@ def test(model, tokenizer, args: Namespace):
     not_found = 0
 
     for test_data in tqdm(test_datas):
-        outputs = pipe(test_data.text, max_new_tokens=args.max_new_tokens, do_sample=True,
+        outputs = pipe(test_data.text, max_new_tokens=args.max_new_tokens, do_sample=args.do_sample,
                        temperature=args.temperature, top_k=args.top_k, top_p=args.top_p)
         model_output = outputs[0]["generated_text"]
         answer_output = text_processor.parse(model_output)
@@ -168,7 +168,7 @@ def valid(model, tokenizer, args: Namespace):
     not_found = 0
 
     for valid_data in tqdm(valid_datas):
-        outputs = pipe(valid_data.text, max_new_tokens=args.max_new_tokens, do_sample=True,
+        outputs = pipe(valid_data.text, max_new_tokens=args.max_new_tokens, do_sample=args.do_sample,
                        temperature=args.temperature, top_k=args.top_k, top_p=args.top_p)
         model_output = outputs[0]["generated_text"]
         answer_output = text_processor.parse(model_output)
@@ -197,11 +197,10 @@ def main(args: Namespace):
     model, tokenizer = get_model_and_tokenizer(
         args.model_name_or_path, args.adapter_name_or_path)
 
-    if args.do_valid:
-        valid(model, tokenizer, args)
-
     if args.do_test:
         test(model, tokenizer, args)
+    if args.do_valid:
+        valid(model, tokenizer, args)
 
 
 if __name__ == "__main__":
@@ -216,6 +215,7 @@ if __name__ == "__main__":
     parser.add_argument("--top_k", type=int, required=True)
     parser.add_argument("--top_p", type=float, required=True)
     parser.add_argument("--output_csv_path", type=str, required=True)
+    parser.add_argument("--do_sample", action="store_true")
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--do_valid", action="store_true")
     parser.add_argument("--do_test", action="store_true")
