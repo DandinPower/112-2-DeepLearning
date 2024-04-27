@@ -26,17 +26,6 @@ class VoteData:
     id: str
     score_ranker: ScoreRanker
 
-    # def vote(files: list[str]):
-    #     print(files)
-    #     # Read all files into dataframes
-    #     dfs = [pd.read_csv(file) for file in files]
-    #     # Concatenate all dataframes
-    #     df = pd.concat(dfs)
-    #     # Group by index and apply voting function to rating
-    #     result = df.groupby('id')['answer'].apply(
-    #         lambda x: Counter(x).most_common(1)[0][0])
-    #     return result
-
 
 def create_vote_data(files: list[str], weights: list[float]) -> list[VoteData]:
     dfs = [pd.read_csv(file) for file in files]
