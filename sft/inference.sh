@@ -1,6 +1,6 @@
-ADAPTER_NAME_OR_PATH=DandinPower/breeze_7b_lora_completion_only
-OUTPUT_CSV_PATH=predict/breeze_7b_lora_completion_only_greedy.csv
-DATASET_NAME_OR_PATH=DandinPower/ZH-Reading-Comprehension-Breeze-Instruct
+ADAPTER_NAME_OR_PATH=DandinPower/taide_llama3_8b_lora_completion_only
+OUTPUT_CSV_PATH=predict/taide_llama3_8b_lora_completion_only.csv
+DATASET_NAME_OR_PATH=DandinPower/ZH-Reading-Comprehension-Llama-Instruct
 # Available dataset
 # 1. DandinPower/ZH-Reading-Comprehension-Llama-Instruct
 # 2. DandinPower/ZH-Reading-Comprehension-Breeze-Instruct
@@ -8,13 +8,14 @@ DATASET_NAME_OR_PATH=DandinPower/ZH-Reading-Comprehension-Breeze-Instruct
 # 4. DandinPower/ZH-Reading-Comprehension-TAIDE-Chat
 # 5. DandinPower/ZH-Reading-Comprehension-Mistral-Instruct
 
-MODEL_NAME_OR_PATH=MediaTek-Research/Breeze-7B-Instruct-v1_0
+MODEL_NAME_OR_PATH=taide/Llama3-TAIDE-LX-8B-Chat-Alpha1
 # Available model
 # 1. meta-llama/Meta-Llama-3-8B-Instruct
 # 2. MediaTek-Research/Breeze-7B-Instruct-v1_0
 # 3. google/gemma-1.1-7b-it
 # 4. taide/TAIDE-LX-7B-Chat
 # 5. mistralai/Mistral-7B-Instruct-v0.2
+# 6. taide/Llama3-TAIDE-LX-8B-Chat-Alpha1
 
 TEST_SPLIT=test
 VALID_SPLIT=validation
@@ -35,7 +36,7 @@ python src/inference.py \
     --temperature $TEMPERATURE \
     --top_k $TOP_K \
     --top_p $TOP_P \
+    --do_sample \
     --do_valid \
     --do_test \
     --verbose \
-    # --do_sample \ # Uncomment this line if you want to use sampling instead of greedy decoding

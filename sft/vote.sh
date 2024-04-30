@@ -1,6 +1,6 @@
-VOTE_FILE="predict/breeze_7b_lora_completion_only.csv predict/breeze_7b_lora_completion_only_5_epochs.csv predict/llama_3_8b_lora_completion_only.csv"
-WEIGHTS="0.890994 0.858999 0.87985"
-OUTPUT_FILE="predict/llama_breeze_breeze_5.csv"
+VOTE_FILE="predict/llama_breeze_taide3_breeze5_gemma_weight.csv predict/llama_breeze_taide3.csv predict/llama_breeze_breeze5.csv predict/llama_breeze_breeze5_gemma_weighted.csv predict/llama_breeze_breeze5_gemma_taide_mistral_weighted.csv"
+WEIGHTS="0.922995 0.920997 0.918996 0.916992 0.912999"
+OUTPUT_FILE="predict/vote_of_blt3b5gw_blt3_bb5l_bb5lgw_bb5lgtmw_weight.csv"
 
 python src/vote.py \
     --vote_files $VOTE_FILE \
