@@ -10,6 +10,7 @@ GEMMA_MODEL_NAME_OR_PATH = "google/gemma-1.1-7b-it"
 TAIDE_MODEL_NAME_OR_PATH = "taide/TAIDE-LX-7B-Chat"
 TAIDE_3_MODEL_NAME_OR_PATH = "taide/Llama3-TAIDE-LX-8B-Chat-Alpha1"
 MISTRAL_MODEL_NAME_OR_PATH = "mistralai/Mistral-7B-Instruct-v0.2"
+TAIWANLLM_MODEL_NAME_OR_PATH = "yentinglin/Taiwan-LLM-7B-v2.1-chat"
 
 
 @dataclass
@@ -71,6 +72,8 @@ def get_response_template(model_name_or_path: str):
         return "<|start_header_id|>assistant<|end_header_id|>"
     elif model_name_or_path == MISTRAL_MODEL_NAME_OR_PATH:
         return "[/INST]"
+    elif model_name_or_path == TAIWANLLM_MODEL_NAME_OR_PATH:
+        return "ASSISTANT:"
     else:
         raise ValueError(f"Unknown model name or path: {model_name_or_path}")
 

@@ -15,6 +15,7 @@ GEMMA_MODEL_NAME_OR_PATH = "google/gemma-1.1-7b-it"
 TAIDE_MODEL_NAME_OR_PATH = "taide/TAIDE-LX-7B-Chat"
 TAIDE_3_MODEL_NAME_OR_PATH = "taide/Llama3-TAIDE-LX-8B-Chat-Alpha1"
 MISTRAL_MODEL_NAME_OR_PATH = "mistralai/Mistral-7B-Instruct-v0.2"
+TAIWANLLM_MODEL_NAME_OR_PATH = "yentinglin/Taiwan-LLM-7B-v2.1-chat"
 
 
 @dataclass
@@ -104,6 +105,19 @@ class GemmaTextProcessor(TextProcessor):
         return text
 
 
+class TaiwanLLMTextProcessor(TextProcessor):
+    def parse(self, model_output: str) -> str:
+        return model_output.split("ASSISTANT:")[1]
+
+    def get_valid_input_text(self, tokenizer, data: dict) -> str:
+        chat = [
+            {"role": "user", "content": data["instruction"]},
+        ]
+        text = tokenizer.apply_chat_template(chat, tokenize=False)
+        text += "ASSISTANT:"
+        return text
+
+
 def get_text_processor(model_name_or_path: str) -> TextProcessor:
     if model_name_or_path == BREEZE_MODEL_NAME_OR_PATH:
         return BreezeTextProcessor()
@@ -117,6 +131,8 @@ def get_text_processor(model_name_or_path: str) -> TextProcessor:
         return BreezeTextProcessor()
     elif model_name_or_path == TAIDE_3_MODEL_NAME_OR_PATH:
         return LlamaTextProcessor()
+    elif model_name_or_path == TAIWANLLM_MODEL_NAME_OR_PATH:
+        return TaiwanLLMTextProcessor()
     else:
         raise ValueError(
             f"Unsupported model_name_or_path: {model_name_or_path}")

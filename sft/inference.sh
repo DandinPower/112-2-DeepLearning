@@ -1,14 +1,15 @@
-ADAPTER_NAME_OR_PATH=DandinPower/taide_llama3_8b_lora_completion_only
-OUTPUT_CSV_PATH=predict/taide_llama3_8b_lora_completion_only.csv
-DATASET_NAME_OR_PATH=DandinPower/ZH-Reading-Comprehension-Llama-Instruct
+ADAPTER_NAME_OR_PATH=DandinPower/taiwanllm_7b_lora_completion_only
+OUTPUT_CSV_PATH=predict/taiwanllm_7b_lora_completion_only.csv
+DATASET_NAME_OR_PATH=DandinPower/ZH-Reading-Comprehension-TaiwanLlama-chat
 # Available dataset
 # 1. DandinPower/ZH-Reading-Comprehension-Llama-Instruct
 # 2. DandinPower/ZH-Reading-Comprehension-Breeze-Instruct
 # 3. DandinPower/ZH-Reading-Comprehension-gemma-it
 # 4. DandinPower/ZH-Reading-Comprehension-TAIDE-Chat
 # 5. DandinPower/ZH-Reading-Comprehension-Mistral-Instruct
+# 6. DandinPower/ZH-Reading-Comprehension-TaiwanLlama-chat
 
-MODEL_NAME_OR_PATH=taide/Llama3-TAIDE-LX-8B-Chat-Alpha1
+MODEL_NAME_OR_PATH=yentinglin/Taiwan-LLM-7B-v2.1-chat
 # Available model
 # 1. meta-llama/Meta-Llama-3-8B-Instruct
 # 2. MediaTek-Research/Breeze-7B-Instruct-v1_0
@@ -16,6 +17,7 @@ MODEL_NAME_OR_PATH=taide/Llama3-TAIDE-LX-8B-Chat-Alpha1
 # 4. taide/TAIDE-LX-7B-Chat
 # 5. mistralai/Mistral-7B-Instruct-v0.2
 # 6. taide/Llama3-TAIDE-LX-8B-Chat-Alpha1
+# 7. yentinglin/Taiwan-LLM-7B-v2.1-chat
 
 TEST_SPLIT=test
 VALID_SPLIT=validation

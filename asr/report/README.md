@@ -28,6 +28,7 @@
     - learning_rate: 0.001
     - warmup_steps: 35000
     - epoch: 45
+    - [configuration example](configurations/espnet(task1)/First_try_with_clean_data)
 
 2. Training Progress
 
@@ -38,10 +39,11 @@
     - loss
         ![loss](images/learn_1e-3_Batch_500000_warmupstep_35000_nonoise/loss.png)
 
-3. Public Leaderboard
+3. WER
     
-    - WER: `0.75083`
-
+    - Public: `0.75083`
+    - Private: `0.71588`
+    
 4. Analysis
 
     - The model is fitting non noise data well, but the model is not robust to noise data.
@@ -86,6 +88,7 @@
         ```
         - [ESC-50 Datasets Link](https://github.com/karolpiczak/ESC-50)
         - [echo-thief Datasets Link](http://www.echothief.com/downloads/)
+    - [configuration example](configurations/espnet(task1)/Try_with_noise_data)
 
 2. Training Progress
 
@@ -96,9 +99,10 @@
     - loss
         ![loss](images/learn_1e-4_Batch_200000_warmupstep_10000_renoise_1/loss.png)
 
-3. Public Leaderboard
+3. WER
     
-    - WER: `0.43819`
+    - Public: `0.43819`
+    - Private: `0.40139`
 
 4. Analysis
 
@@ -127,6 +131,7 @@
             PitchShift(min_semitones=-4, max_semitones=4, p=0.4),
         ])
         ```
+    - [configuration example](configurations/espnet(task1)/Try_with_less_noise_data)
 
 2. Training Progress
 
@@ -137,9 +142,10 @@
     - loss
         ![loss](images/learn_1e-3_Batch_500000_warmupstep_35000_renoise_5_no_timestretch_background-impulse-short/loss.png)
 
-3. Public Leaderboard
+3. WER
     
-    - WER: `0.42006`
+    - Public: `0.42006`
+    - Private: `0.39794`
 
 4. Analysis
 
@@ -159,6 +165,7 @@
     - warmup_steps: 35000
     - epoch: 200
     - noise methods: same as 1.2
+    - [configuration example](configurations/espnet(task1)/Try_with_char_token_type)
 
 2. Training Progress
 
@@ -169,9 +176,10 @@
     - loss
         ![loss](images/char_numblock_24_epoch_200/loss.png)
 
-3. Public Leaderboard
+3. WER
     
-    - WER: `0.29446`
+    - Public: `0.29446`
+    - Private: `0.29118`
 
 4. Analysis
 
@@ -193,6 +201,7 @@
     - warmup_steps: 40000
     - epoch: 120
     - noise methods: same as 1.2
+    - [configuration example](configurations/espnet+s3prl(task2)/Try_with_pre-trained_model)
 
 2. Training Progress
 
@@ -203,9 +212,10 @@
     - loss
         ![loss](images/conformer_hubert_base/loss.png)
 
-3. Public Leaderboard
+3. WER
     
-    - WER: `0.47249`
+    - Public: `0.47249`
+    - Private: `0.44562`
 
 4. Analysis
 
@@ -231,20 +241,22 @@
     - batch_size: 16
     - learning_rate: 1e-5
     - warmup_steps: 500
-    - epoch: 30
+    - epoch: 25
     - noise methods: same as 1.2
     - memory_efficient: 
         1. enable fp16 training (Mixed Precision Training)
         2. gradient_checkpointing (Reduce activation memory usage)
+    - [configuration example](configurations/whisper-finetune(task3)/Try_with_Whisper-Medium)
 
 3. Training Progress
 
     - wer
         ![wer](images/whisper-medium-wer.png)
 
-4. Public Leaderboard
+4. WER
     
-    - WER: `0.15080`
+    - Public: `0.15080`
+    - Private: `0.15499`
 
 5. Analysis
 
@@ -258,4 +270,37 @@
         3. `deepspeed` zero infinity offload (use NVMe SSD to store the model parameters) [deepspeed integration](https://github.com/huggingface/community-events/tree/main/whisper-fine-tuning-event#deepspeed)
         2. `bitsandbytes` 8bit optimizer (turn optimizer states like momentum and variance from 32 bits to 8bits) [bitsandbytes 8bit optimizer integration](https://github.com/huggingface/community-events/tree/main/whisper-fine-tuning-event#adam-8bit)
 
+#### 3.2 Try with Whisper-Large and Use Correct Batch size
 
+1. Configurations
+    
+    - model: OpenAI/whisper-large
+    - token_type: char
+    - batch_size: 4
+    - gradient_accumulation_steps: 8
+    - learning_rate: 1e-5
+    - warmup_steps: 500
+    - epoch: 25
+    - noise methods: same as 1.2
+    - memory_efficient: 
+        1. enable fp16 training (Mixed Precision Training)
+        2. gradient_checkpointing (Reduce activation memory usage)
+        3. small batch size + gradient accumulation
+        4. 8bit optimizer (bitsandbytes)
+    - [configuration example](configurations/whisper-finetune(task3)/Try_with_Whisper-Large)
+
+3. Training Progress
+
+    - wer
+        ![wer](images/whisper-large-wer.png)
+
+4. WER
+    
+    - Public: `0.17237`
+    - Private: `0.14897`
+
+5. Analysis
+
+    - For further train a larger model (1550M) on a single GPU with 24GB memory, it must enable the `bitsandbytes` 8bit optimizer.
+    - Modify batch size and gradient accumulation steps to match the recommended batch size for `whisper` family model.
+    - The larges model can have the best valid performance, and it also can have better performance on the test data.
