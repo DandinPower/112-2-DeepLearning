@@ -1,0 +1,4 @@
+deepspeed
+peft
+tensorboard
+accelerate

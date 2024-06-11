@@ -31,7 +31,7 @@
 
     - Copy all my modification file into MiniCPM-V finetune folder (only check on the commit `9bd93a2`)
         ```bash
-        cp -r modification/MiniCPM-V/* MiniCPM-V/finetune/
+        cp -r modification/minicpm/* MiniCPM-V/finetune/
         ```
     
     - Install my modification dependencies
@@ -52,7 +52,7 @@
     
     - Copy all my modification file into TinyLLaVA training folder (only check on the commit `6c581c3`)
         ```bash
-        cp -r modification/TinyLLaVA_Factory* TinyLLaVA_Factory/scripts/train
+        cp -r modification/tinyllava/* TinyLLaVA_Factory/scripts/train
         ```
 
 ## Usage
