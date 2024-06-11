@@ -1,0 +1,8 @@
+.env
+__pycache__
+venv
+minicpmv_venv
+tinyllava_venv
+data-preprocessing_venv
+MiniCPM-V
+TinyLLaVA_Factory
